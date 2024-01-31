@@ -1,0 +1,30 @@
+test_15_F_command_motors starting
+WHOU
+
+OK
+DUMMY
+
+*** Not Known ***
+WHOU
+
+OK
+DUMMY
+
+*** Not Known ***
+MFWD0050
+
+OK
+50
+DUMMY
+
+*** Not Known ***
+MSTP
+
+OK
+DUMMY
+
+*** Not Known ***
+EXIT
+
+OK
+test_15_F_command_motors finished
