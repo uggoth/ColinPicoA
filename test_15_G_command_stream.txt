@@ -1,0 +1,2 @@
+test_15_G_command_stream starting
+test_15_G_command_stream finished

@@ -5,12 +5,12 @@ import utime
 import machine
 
 toggle = 0
-handshake = machine.Pin(15,machine.Pin.OUT)
+handshake = machine.Pin(22,machine.Pin.OUT)
 handshake.value(toggle)
 
 led_onboard=machine.Pin(25, machine.Pin.OUT)
 
-for i in range(19):
+for i in range(29):
     utime.sleep_ms(500)
     toggle = 1 - toggle
     handshake.value(toggle)

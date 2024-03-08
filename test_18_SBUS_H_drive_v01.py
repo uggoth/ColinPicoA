@@ -1,6 +1,6 @@
 module_name = 'test_18_SBUS_H_drive_v01.py'
 description = 'testing object with headlights'
-import ThisPico_A_V32 as ThisPico
+import ThisPico_A_V34 as ThisPico
 ColObjects = ThisPico.ColObjects
 import utime
 

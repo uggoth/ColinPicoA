@@ -1,4 +1,4 @@
-module_name = 'main_zyderbot_rc_v03.py'
+module_name = 'main_zyderbot_rc_v04.py'
 module_description = 'Joystick Mixing'
 print (module_name, 'starting')
 
@@ -22,7 +22,7 @@ def mix(inputs):
     #print (' ')
     size = len(inputs)
     if ((size > 3) or (size < 2)):
-        raise ColObjects.ColError('Mixer must have inputs: steering, throttle, slew[optional]')
+        raise ColObjects.ColError('Mixer must have inputs: steering, throttle, crab[optional]')
     for i in range(len(inputs)):
         if inputs[i] is None:
             inputs[i] = 0
@@ -43,19 +43,19 @@ def mix(inputs):
     #print ('fwd_abs', fwd_abs)
     spin_abs = array_abs(spin_levels)
     total_out = sum(fwd_abs) + sum(spin_abs)
-    slew_levels = [0,0,0,0]
+    crab_levels = [0,0,0,0]
     if size == 3:
-        slew = inputs[2]
-        slew_levels = [slew, slew, -slew, -slew]
-        slew_abs = array_abs(slew_levels)
-        total_out = total_out + sum(slew_abs)
+        crab = inputs[2]
+        crab_levels = [crab, crab, -crab, -crab]
+        crab_abs = array_abs(crab_levels)
+        total_out = total_out + sum(crab_abs)
     #print ('total_out', total_out)
     ratio_a = 1.0
     #print ('ratio', ratio)
-    lf_level = (fwd_levels[0] + spin_levels[0] + slew_levels[0]) * ratio_a
-    rf_level = (fwd_levels[1] + spin_levels[1] - slew_levels[1]) * ratio_a
-    lb_level = (fwd_levels[2] + spin_levels[2] + slew_levels[2]) * ratio_a
-    rb_level = (fwd_levels[3] + spin_levels[3] - slew_levels[3]) * ratio_a
+    lf_level = (fwd_levels[0] + spin_levels[0] + crab_levels[0]) * ratio_a
+    rf_level = (fwd_levels[1] + spin_levels[1] - crab_levels[1]) * ratio_a
+    lb_level = (fwd_levels[2] + spin_levels[2] + crab_levels[2]) * ratio_a
+    rb_level = (fwd_levels[3] + spin_levels[3] - crab_levels[3]) * ratio_a
     output_abs = array_abs([lf_level, rf_level, lb_level, rb_level])
     biggest_out = max(output_abs)
     ratio_b = biggest_in / biggest_out
@@ -100,17 +100,17 @@ for motor in motor_list:
 #  values obtained from test_18_SBUS_A
 min_steering = 692
 min_throttle = 601
-min_slew = 569
+min_crab = 569
 min_switch = 201
 
 mid_steering = 1094
 mid_throttle = 1000
-mid_slew = 976
+mid_crab = 976
 mid_switch = 1004
 
 max_steering = 1486
 max_throttle = 1401
-max_slew = 1369
+max_crab = 1369
 max_switch = 1801
 
 
@@ -122,8 +122,8 @@ steering_interpolator = ColObjects.Interpolator('Steering Interpolator',
 throttle_interpolator = ColObjects.Interpolator('Throttle Interpolator',
                                     [100, min_throttle, mid_throttle - dead_zone, mid_throttle + dead_zone, max_throttle, 2000],
                                     [-100.0, -100.0, 0.0, 0.0, 100.0, 100.0])
-slew_interpolator = ColObjects.Interpolator('Slew Interpolator',
-                                    [100, min_slew, mid_slew - dead_zone, mid_slew + dead_zone, max_slew, 2000],
+crab_interpolator = ColObjects.Interpolator('crab Interpolator',
+                                    [100, min_crab, mid_crab - dead_zone, mid_crab + dead_zone, max_crab, 2000],
                                     [100.0, 100.0, 0.0, 0.0, -100.0, -100.0])
 switch_interpolator = ColObjects.Interpolator('Switch Interpolator',
                                     [100, min_switch, mid_switch - dead_zone, mid_switch + dead_zone, max_switch, 2000],
@@ -150,13 +150,13 @@ while True:
         steering_in = steering_interpolator.interpolate(steering_raw)
         throttle_raw = channels[1]
         throttle_in = throttle_interpolator.interpolate(throttle_raw)
-        slew_raw = channels[3]
-        slew_in = slew_interpolator.interpolate(slew_raw)
+        crab_raw = channels[3]
+        crab_in = crab_interpolator.interpolate(crab_raw)
         if switch_in > 0:
-            temp = slew_in
-            slew_in = -steering_in
+            temp = crab_in
+            crab_in = -steering_in
             steering_in = -temp
-        lf_level, rf_level, lb_level, rb_level = mix([steering_in, throttle_in, slew_in])
+        lf_level, rf_level, lb_level, rb_level = mix([steering_in, throttle_in, crab_in])
         #print (lf_level, rf_level, lb_level, rb_level)
         motor_lf.run(-lf_level)
         motor_rf.run(rf_level)

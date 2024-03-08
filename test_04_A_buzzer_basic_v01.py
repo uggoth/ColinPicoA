@@ -5,11 +5,11 @@ print (module_name, 'starting')
 import machine
 import utime
 
-pin = machine.Pin(17)
+pin = machine.Pin(14)
 pwm = machine.PWM(pin)
 pwm.freq(244)
 pwm.duty_u16(32000)
-utime.sleep_ms(500)
+utime.sleep_ms(1500)
 pwm.deinit()
 
 print (module_name, 'finished')

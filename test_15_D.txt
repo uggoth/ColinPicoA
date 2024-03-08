@@ -1,0 +1,23 @@
+Starting
+
+0000WHOU
+
+Command WHOU
+0000WHOU
+
+Command WHOU
+0001WHOU
+
+Command WHOU
+0002GASH
+
+Command not WHOU
+0003POSN
+
+Command not WHOU
+0004EXIT
+
+Command EXIT
+
+Finished
+
